@@ -10,13 +10,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.room_artistas.DAO.ArtistaDao;
+import com.example.room_artistas.DAO.UADao;
 import com.example.room_artistas.Entities.Artista;
+import com.example.room_artistas.Entities.Usuario;
+import com.example.room_artistas.Entities.UsuarioArtistaEntity;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-@Database(entities = Artista.class, exportSchema = false, version = 1)
+@Database(entities = {Artista.class, Usuario.class, UsuarioArtistaEntity.class}, exportSchema = false, version = 1)
 
 public abstract class ArtistaDatabase extends RoomDatabase {
 
@@ -47,39 +46,34 @@ public abstract class ArtistaDatabase extends RoomDatabase {
     };
 
     private static class LLenarBDDAsyncTask extends AsyncTask<Void, Void, Void>{
-        private ArtistaDao artistaDao;
+        private UADao UADao;
 
         public LLenarBDDAsyncTask(ArtistaDatabase db) {
-            this.artistaDao = db.artistaDao();
+            this.UADao = db.artistaDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
 
-            artistaDao.insert(new Artista("Harry STasdasdyles"));
-            artistaDao.insert(new Artista("Niallasd asdasdHOran"));
-            artistaDao.insert(new Artista("Perasdl JaasdasdasM"));
-            artistaDao.insert(new Artista("The asdKillErs"));
-            artistaDao.insert(new Artista("Ladyasdas GagA"));
-            artistaDao.insert(new Artista("Chrisasdas CoOrnell"));
-            artistaDao.insert(new Artista("Harry SasdasTyles"));
-            artistaDao.insert(new Artista("Niallasd HOran"));
-            artistaDao.insert(new Artista("Perasdl JasdM"));
-            artistaDao.insert(new Artista("The KasdaillErs"));
-            artistaDao.insert(new Artista("Ladyasd GagA"));
-            artistaDao.insert(new Artista("Chris CasdoOrnell"));
-            artistaDao.insert(new Artista("Harry asdSTyles"));
-            artistaDao.insert(new Artista("Niallaasds HOran"));
-            artistaDao.insert(new Artista("Perl JdaaM"));
-            artistaDao.insert(new Artista("The KasdaillErs"));
-            artistaDao.insert(new Artista("Lady GagA"));
-            artistaDao.insert(new Artista("Chris doOrnell"));
-            artistaDao.insert(new Artista("Harryasdasda asdSTyles"));
-            artistaDao.insert(new Artista("Niall HasdasdOasd"));
-            artistaDao.insert(new Artista("The KilasdasdlErs"));
+            UADao.insert(new Artista("Harry STasdasdyles"));
+            UADao.insert(new Artista("Niallasd asdasdHOran"));
+            UADao.insert(new Artista("Perasdl JaasdasdasM"));
+            UADao.insert(new Artista("The asdKillErs"));
+            UADao.insert(new Artista("Ladyasdas GagA"));
+            UADao.insert(new Artista("Chrisasdas CoOrnell"));
+            UADao.insert(new Artista("Harry SasdasTyles"));
+            UADao.insert(new Artista("Niallasd HOran"));
+            UADao.insert(new Artista("Perasdl JasdM"));
+            UADao.insert(new Artista("The KasdaillErs"));
+            UADao.insert(new Artista("Ladyasd GagA"));
+            UADao.insert(new Artista("Chris CasdoOrnell"));
+            UADao.insert(new Artista("Harry asdSTyles"));
+            UADao.insert(new Artista("Niallaasds HOran"));
+            UADao.insert(new Artista("Perl JdaaM"));
+
             return null;
         }
     }
-    public abstract ArtistaDao artistaDao();
+    public abstract UADao artistaDao();
 }

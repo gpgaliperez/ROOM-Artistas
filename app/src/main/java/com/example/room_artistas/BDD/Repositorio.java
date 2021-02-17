@@ -4,106 +4,195 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Delete;
 
-import com.example.room_artistas.BDD.ArtistaDatabase;
-import com.example.room_artistas.DAO.ArtistaDao;
+import com.example.room_artistas.DAO.UADao;
 import com.example.room_artistas.Entities.Artista;
+import com.example.room_artistas.Entities.Usuario;
+import com.example.room_artistas.Entities.UsuarioArtistaEntity;
+import com.example.room_artistas.Entities.UsuarioConArtistas;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Repositorio {
-    private ArtistaDao artistaDao;
+    private UADao UADao;
     private LiveData<List<Artista>> listaArtistas;
+    private LiveData<List<UsuarioConArtistas>> listaUsuariosConArtistas;
 
     public Repositorio(Application application) {
         ArtistaDatabase database = ArtistaDatabase.getInstance(application);
-        artistaDao = database.artistaDao();
-        listaArtistas = artistaDao.getArtistaList();
+        UADao = database.artistaDao();
+        listaArtistas = UADao.getArtistaList();
+        listaUsuariosConArtistas = UADao.getUsuariosConArtistas();
+    }
+
+    public void insertUA(UsuarioArtistaEntity usuarioArtistaEntity){
+        new InsertUAAsyncTask(UADao).execute(usuarioArtistaEntity);
+    }
+
+    public void insertU(Usuario usuario){
+        new InsertUsuarioAsyncTask(UADao).execute(usuario);
     }
 
     public void insert(Artista artista){
-        new InsertArtistaAsyncTask(artistaDao).execute(artista);
+        new InsertArtistaAsyncTask(UADao).execute(artista);
+    }
+
+    public void update(Artista artista){
+        new UpdateArtistaAsyncTask(UADao).execute(artista);
+    }
+
+    public void deleteAll(){
+        new DeleteAllArtistaAsyncTask(UADao).execute();
+    }
+
+    public void deleteAllU(){ new DeleteAllUsuariosAsyncTask(UADao).execute(); }
+
+    public void deleteAllUA(){
+        new DeleteAllUAAsyncTask(UADao).execute();
+    }
+
+    public void delete(Artista artista){
+        new DeleteArtistaAsyncTask(UADao).execute();
     }
 
     public LiveData<List<Artista>> getArtistaList() {
         return listaArtistas;
     }
 
-    public void update(Artista artista){
-        new UpdateArtistaAsyncTask(artistaDao).execute(artista);
+    public LiveData<List<UsuarioConArtistas>> getUsuariosConArtistas() {
+        return listaUsuariosConArtistas;
     }
 
-    public void deleteAll(){
-        new DeleteAllArtistaAsyncTask(artistaDao).execute();
+    /*public UsuarioConArtistas getUsuarioConArtistas() {
+        return listaUsuarioConArtistas;
+    }*/
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static class InsertUsuarioAsyncTask extends AsyncTask<Usuario, Void, Void>{
+
+        private UADao UADao;
+
+        public InsertUsuarioAsyncTask(UADao UADao) {
+            this.UADao = UADao;
+        }
+
+        @Override
+        protected Void doInBackground(Usuario... usuario) {
+            UADao.insertU(usuario[0]);
+            return null;
+        }
     }
 
-    public void delete(Artista artista){
-        new DeleteArtistaAsyncTask(artistaDao).execute();
-    }
+    private static class InsertUAAsyncTask extends AsyncTask<UsuarioArtistaEntity, Void, Void>{
 
+        private UADao UADao;
+
+        public InsertUAAsyncTask(UADao UADao) {
+            this.UADao = UADao;
+        }
+
+        @Override
+        protected Void doInBackground(UsuarioArtistaEntity... usuarioArtistaEntities) {
+            UADao.insertUA(usuarioArtistaEntities[0]);
+            return null;
+        }
+    }
 
 
     private static class InsertArtistaAsyncTask extends AsyncTask<Artista, Void, Void>{
 
-        private ArtistaDao artistaDao;
+        private UADao UADao;
 
-        public InsertArtistaAsyncTask(ArtistaDao artistaDao) {
-            this.artistaDao = artistaDao;
+        public InsertArtistaAsyncTask(UADao UADao) {
+            this.UADao = UADao;
         }
 
         @Override
         protected Void doInBackground(Artista... artistas) {
-            artistaDao.insert(artistas[0]);
+            UADao.insert(artistas[0]);
             return null;
         }
     }
 
     private static class UpdateArtistaAsyncTask extends AsyncTask<Artista, Void, Void>{
 
-        private ArtistaDao artistaDao;
+        private UADao UADao;
 
-        public UpdateArtistaAsyncTask(ArtistaDao artistaDao) {
-            this.artistaDao = artistaDao;
+        public UpdateArtistaAsyncTask(UADao UADao) {
+            this.UADao = UADao;
         }
 
         @Override
         protected Void doInBackground(Artista... artistas) {
-            artistaDao.update(artistas[0]);
+            UADao.update(artistas[0]);
             return null;
         }
     }
 
     private static class DeleteArtistaAsyncTask extends AsyncTask<Artista, Void, Void>{
 
-        private ArtistaDao artistaDao;
+        private UADao UADao;
 
-        public DeleteArtistaAsyncTask(ArtistaDao artistaDao) {
-            this.artistaDao = artistaDao;
+        public DeleteArtistaAsyncTask(UADao UADao) {
+            this.UADao = UADao;
         }
 
         @Override
         protected Void doInBackground(Artista... artistas) {
-            artistaDao.delete(artistas[0]);
+            UADao.delete(artistas[0]);
             return null;
         }
     }
 
+
     private static class DeleteAllArtistaAsyncTask extends AsyncTask<Void, Void, Void>{
 
-        private ArtistaDao artistaDao;
+        private UADao UADao;
 
-        public DeleteAllArtistaAsyncTask(ArtistaDao artistaDao) {
-            this.artistaDao = artistaDao;
+        public DeleteAllArtistaAsyncTask(UADao UADao) {
+            this.UADao = UADao;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            artistaDao.deleteAll();
+            UADao.deleteAll();
             return null;
         }
 
+
+    }
+
+    private static class DeleteAllUsuariosAsyncTask extends AsyncTask<Void, Void, Void>{
+
+        private UADao UADao;
+
+        public DeleteAllUsuariosAsyncTask(UADao UADao) {
+            this.UADao = UADao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            UADao.deleteAllU();
+            return null;
+        }
+
+    }
+
+    private static class DeleteAllUAAsyncTask extends AsyncTask<Void, Void, Void>{
+
+        private UADao UADao;
+
+        public DeleteAllUAAsyncTask(UADao UADao) {
+            this.UADao = UADao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            UADao.deleteAllUA();
+            return null;
+        }
 
     }
 

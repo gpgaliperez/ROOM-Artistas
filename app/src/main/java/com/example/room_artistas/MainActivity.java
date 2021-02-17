@@ -9,12 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.room_artistas.Adapters.ArtistaAdapter;
 import com.example.room_artistas.BDD.ArtistaDatabase;
 import com.example.room_artistas.BDD.ArtistaViewModel;
 import com.example.room_artistas.BDD.Repositorio;
 import com.example.room_artistas.Entities.Artista;
+import com.example.room_artistas.Entities.Usuario;
+import com.example.room_artistas.Entities.UsuarioArtistaEntity;
+import com.example.room_artistas.Entities.UsuarioConArtistas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +48,35 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this,
                 ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ArtistaViewModel.class);
-        viewModel.getAllArtistas().observe(this, new Observer<List<Artista>>() {
+        /*viewModel.getAllArtistas().observe(this, new Observer<List<Artista>>() {
             @Override
             public void onChanged(List<Artista> artistas) {
                 // Se llamará cada vez que los datos en el LiveData Object cambie
                 // Actualizar RecyclerView
                 adapter.setArtistas(artistas);
+            }
+        });*/
+
+        //////////////////////////////////////////
+        viewModel.deleteAllUA();
+        viewModel.deleteAllU();
+        Usuario u = new Usuario("10101010");
+        String idUsuario = u.getUsuarioId();
+        viewModel.insertU(u);
+
+        viewModel.insertUA(new UsuarioArtistaEntity(idUsuario, 1));
+        viewModel.insertUA(new UsuarioArtistaEntity(idUsuario, 2));
+        viewModel.insertUA(new UsuarioArtistaEntity(idUsuario, 3));
+        viewModel.insertUA(new UsuarioArtistaEntity(idUsuario, 4));
+
+        viewModel.getAllUsuariosConArtistas().observe(this, new Observer<List<UsuarioConArtistas>>() {
+            @Override
+            public void onChanged(List<UsuarioConArtistas> artistas) {
+                // Se llamará cada vez que los datos en el LiveData Object cambie
+                // Actualizar RecyclerView
+                UsuarioConArtistas uCa = artistas.get(0);
+                Log.d("ROOM ", "usuarioId dentro de viewModel.getAllUcA " + uCa.getUsuario().getUsuarioId());
+                adapter.setArtistas(uCa.getArtistas());
             }
         });
 
