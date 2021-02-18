@@ -21,12 +21,14 @@ public class ArtistaViewModel extends AndroidViewModel {
     private Repositorio repositorio;
     private LiveData<List<Artista>> allNotes;
     private LiveData<List<UsuarioConArtistas>> allUsuariosConArtistas;
+    private LiveData<UsuarioConArtistas> usuarioConArtistas;
 
-    public ArtistaViewModel(@NonNull Application application) {
+    public ArtistaViewModel(@NonNull Application application, String idU) {
         super(application);
-        repositorio = new Repositorio(application);
+        repositorio = new Repositorio(application, idU);
         allNotes = repositorio.getArtistaList();
-        allUsuariosConArtistas = repositorio.getUsuariosConArtistas();
+        allUsuariosConArtistas = repositorio.getAllUsuariosConArtistas();
+        usuarioConArtistas = repositorio.getUsuarioConArtistas();
     }
 
     public void insertUA(UsuarioArtistaEntity usuarioArtistaEntity) {
@@ -67,7 +69,7 @@ public class ArtistaViewModel extends AndroidViewModel {
 
     public LiveData<List<UsuarioConArtistas>> getAllUsuariosConArtistas() { return allUsuariosConArtistas; }
 
-    /*public LiveData<UsuarioConArtistas> getUsuarioConArtistas(String uId){
-        return allUsuariosConArtistas
-    }*/
+    public LiveData<UsuarioConArtistas> getUsuarioConArtistas(){
+        return usuarioConArtistas;
+    }
 }

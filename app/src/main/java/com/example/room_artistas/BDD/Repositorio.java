@@ -2,6 +2,7 @@ package com.example.room_artistas.BDD;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -15,14 +16,19 @@ import java.util.List;
 
 public class Repositorio {
     private UADao UADao;
+    private String uid;
     private LiveData<List<Artista>> listaArtistas;
     private LiveData<List<UsuarioConArtistas>> listaUsuariosConArtistas;
+    private LiveData<UsuarioConArtistas> usuarioConArtistas;
 
-    public Repositorio(Application application) {
+    public Repositorio(Application application, String idU) {
         ArtistaDatabase database = ArtistaDatabase.getInstance(application);
         UADao = database.artistaDao();
         listaArtistas = UADao.getArtistaList();
-        listaUsuariosConArtistas = UADao.getUsuariosConArtistas();
+        listaUsuariosConArtistas = UADao.getAllUsuariosConArtistas();
+        uid = idU;
+        usuarioConArtistas = UADao.getUsuarioConArtistas(idU);
+        Log.d("ROOM - REPOSITORIO", "Repositorio: "+ usuarioConArtistas);
     }
 
     public void insertUA(UsuarioArtistaEntity usuarioArtistaEntity){
@@ -59,13 +65,13 @@ public class Repositorio {
         return listaArtistas;
     }
 
-    public LiveData<List<UsuarioConArtistas>> getUsuariosConArtistas() {
+    public LiveData<List<UsuarioConArtistas>> getAllUsuariosConArtistas() {
         return listaUsuariosConArtistas;
     }
 
-    /*public UsuarioConArtistas getUsuarioConArtistas() {
-        return listaUsuarioConArtistas;
-    }*/
+    public LiveData<UsuarioConArtistas> getUsuarioConArtistas() {
+        return usuarioConArtistas;
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////

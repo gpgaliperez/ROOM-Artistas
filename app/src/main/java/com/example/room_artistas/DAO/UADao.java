@@ -46,7 +46,11 @@ public interface UADao {
 
     @Transaction
     @Query("SELECT * FROM usuario")
-    LiveData<List<UsuarioConArtistas>> getUsuariosConArtistas();
+    LiveData<List<UsuarioConArtistas>> getAllUsuariosConArtistas();
+
+    @Transaction
+    @Query("SELECT * FROM usuario WHERE usuarioId = :id")
+    LiveData<UsuarioConArtistas> getUsuarioConArtistas(String id);
 
 
     @Query("Select * from artista")
